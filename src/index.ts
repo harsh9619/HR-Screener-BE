@@ -16,6 +16,9 @@ const PORT = process.env.PORT || 5000;
 const defaultOrigins = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
+  'https://hr-screener-fe-git-main-harsh9619s-projects.vercel.app',
+  'https://hr-screener-7c45gk7in-harsh9619s-projects.vercel.app',
+  'https://hr-screener-fe.vercel.app'
 ];
 
 const envOrigins = process.env.FRONTEND_URL

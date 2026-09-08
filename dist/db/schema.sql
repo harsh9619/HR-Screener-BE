@@ -1,0 +1,61 @@
+CREATE TABLE IF NOT EXISTS users (
+  id VARCHAR(255) PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  created_at VARCHAR(255) NOT NULL,
+  updated_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS roles (
+  id VARCHAR(255) PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  created_by_id VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at VARCHAR(255) NOT NULL,
+  updated_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS role_requirements (
+  id VARCHAR(255) PRIMARY KEY,
+  role_id VARCHAR(255) NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+  requirement TEXT NOT NULL,
+  is_must_have BOOLEAN NOT NULL DEFAULT TRUE,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS candidates (
+  id VARCHAR(255) PRIMARY KEY,
+  role_id VARCHAR(255) NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  resume_text TEXT NOT NULL,
+  integrity_status VARCHAR(50) NOT NULL DEFAULT 'clear',
+  fit_score INTEGER NOT NULL DEFAULT 0,
+  created_at VARCHAR(255) NOT NULL,
+  updated_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS integrity_checks (
+  id VARCHAR(255) PRIMARY KEY,
+  candidate_id VARCHAR(255) NOT NULL REFERENCES candidates(id) ON DELETE CASCADE,
+  check_type VARCHAR(100) NOT NULL,
+  flagged BOOLEAN NOT NULL DEFAULT FALSE,
+  title VARCHAR(255) NOT NULL,
+  explanation TEXT NOT NULL,
+  evidence TEXT,
+  confidence DOUBLE PRECISION NOT NULL,
+  created_at VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS candidate_scores (
+  id VARCHAR(255) PRIMARY KEY,
+  candidate_id VARCHAR(255) UNIQUE NOT NULL REFERENCES candidates(id) ON DELETE CASCADE,
+  overall_score INTEGER NOT NULL,
+  summary TEXT NOT NULL,
+  scoring_result TEXT NOT NULL,
+  created_at VARCHAR(255) NOT NULL,
+  updated_at VARCHAR(255) NOT NULL
+);
