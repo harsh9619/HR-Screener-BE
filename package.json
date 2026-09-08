@@ -8,12 +8,11 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && shx mkdir -p dist/db && shx cp src/db/schema.sql dist/db/schema.sql",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "seed": "ts-node src/db/seed.ts",
-    "test": "echo \"No tests specified\"",
-    "deploy": "gh-pages -d dist"
+    "test": "echo \"No tests specified\""
   },
   "dependencies": {
     "@types/pg": "^8.23.1",
@@ -37,6 +36,7 @@
     "@types/pdf-parse": "^1.1.5",
     "@types/uuid": "^9.0.8",
     "gh-pages": "^6.3.0",
+    "shx": "^0.4.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3",

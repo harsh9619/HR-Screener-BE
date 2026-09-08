@@ -6,7 +6,7 @@ node_modules/
 !.env.example
 
 # Build output
-# dist/
+dist/
 
 # Logs
 logs/

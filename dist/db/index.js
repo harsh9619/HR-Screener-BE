@@ -66,7 +66,8 @@ async function query(text, params) {
 }
 async function initDb() {
     await ensureDatabaseExists();
-    const schemaPath = path_1.default.join(__dirname, 'schema.sql');
+    // const schemaPath = path.join(__dirname, 'schema.sql');
+    const schemaPath = path_1.default.join(process.cwd(), "src", "db", "schema.sql");
     const schemaSql = fs_1.default.readFileSync(schemaPath, 'utf8');
     try {
         await pool.query(schemaSql);
