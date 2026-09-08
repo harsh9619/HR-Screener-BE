@@ -13,10 +13,20 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS setup
-const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+const defaultOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+];
+
+const envOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map((url) => url.trim()).filter(Boolean)
+  : defaultOrigins;
+
+const allowedOrigins = Array.from(new Set([...envOrigins, ...defaultOrigins]));
+
 app.use(
   cors({
-    origin: [frontendUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
