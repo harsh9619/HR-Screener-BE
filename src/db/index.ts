@@ -10,12 +10,12 @@ const dbName = process.env.PGDATABASE || 'candidate_screener';
 const poolConfig: PoolConfig = process.env.DATABASE_URL
   ? { connectionString: process.env.DATABASE_URL }
   : {
-      host: process.env.PGHOST || 'localhost',
-      port: parseInt(process.env.PGPORT || '5432', 10),
-      database: dbName,
-      user: process.env.PGUSER || 'postgres',
-      password: process.env.PGPASSWORD || 'postgres',
-    };
+    host: process.env.PGHOST || 'localhost',
+    port: parseInt(process.env.PGPORT || '5432', 10),
+    database: dbName,
+    user: process.env.PGUSER || 'postgres',
+    password: process.env.PGPASSWORD || 'postgres',
+  };
 
 const pool = new Pool(poolConfig);
 
@@ -37,12 +37,12 @@ async function ensureDatabaseExists() {
   const adminClientConfig = process.env.DATABASE_URL
     ? { connectionString: process.env.DATABASE_URL.replace(/\/[^/]*$/, '/postgres') }
     : {
-        host: process.env.PGHOST || 'localhost',
-        port: parseInt(process.env.PGPORT || '5432', 10),
-        database: 'postgres',
-        user: process.env.PGUSER || 'postgres',
-        password: process.env.PGPASSWORD || 'postgres',
-      };
+      host: process.env.PGHOST || 'localhost',
+      port: parseInt(process.env.PGPORT || '5432', 10),
+      database: 'postgres',
+      user: process.env.PGUSER || 'postgres',
+      password: process.env.PGPASSWORD || 'postgres',
+    };
 
   const adminClient = new Client(adminClientConfig);
   try {
@@ -59,7 +59,7 @@ async function ensureDatabaseExists() {
   } catch (error) {
     console.warn('Database auto-creation check note:', (error as Error).message);
   } finally {
-    await adminClient.end().catch(() => {});
+    await adminClient.end().catch(() => { });
   }
 }
 
@@ -70,7 +70,8 @@ export async function query(text: string, params?: any[]) {
 export async function initDb() {
   await ensureDatabaseExists();
 
-  const schemaPath = path.join(__dirname, 'schema.sql');
+  // const schemaPath = path.join(__dirname, 'schema.sql');
+  const schemaPath = path.join(process.cwd(), "src", "db", "schema.sql");
   const schemaSql = fs.readFileSync(schemaPath, 'utf8');
   try {
     await pool.query(schemaSql);
