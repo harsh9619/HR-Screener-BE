@@ -1,0 +1,50 @@
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { findUserByEmail, findUserById } from './auth.query';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'crystal_group_candidate_screener_super_secret_jwt_key_2026';
+
+export interface LoginResult {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}
+
+export const loginUser = async (email: string, password: string): Promise<LoginResult> => {
+  const user = await findUserByEmail(email);
+
+  if (!user) {
+    throw new Error('Invalid credentials.');
+  }
+
+  const isPasswordValid = bcrypt.compareSync(password, user.password_hash);
+  if (!isPasswordValid) {
+    throw new Error('Invalid credentials.');
+  }
+
+  const token = jwt.sign(
+    { id: user.id, email: user.email, name: user.name },
+    JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  return {
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    },
+  };
+};
+
+export const getCurrentUser = async (id: string) => {
+  const user = await findUserById(id);
+  if (!user) {
+    throw new Error('User not found.');
+  }
+  return user;
+};
