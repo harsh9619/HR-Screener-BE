@@ -9,7 +9,7 @@ export interface AuthRequest extends Request {
   };
 }
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || 'crystal_group_candidate_screener_super_secret_jwt_key_2026';
 
 export function authenticateJwt(req: AuthRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;

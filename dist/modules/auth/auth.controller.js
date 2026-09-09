@@ -33,8 +33,25 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMe = exports.login = void 0;
+exports.login = exports.register = void 0;
 const authService = __importStar(require("./auth.service"));
+const register = async (req, res, next) => {
+    try {
+        const { email, password, name } = req.body;
+        if (!email || !password || !name) {
+            return res.status(400).json({ error: 'Name, email, and password are required.' });
+        }
+        const result = await authService.registerUser(email, password, name);
+        return res.status(201).json(result);
+    }
+    catch (error) {
+        if (error.message === 'Email address is already registered.') {
+            return res.status(400).json({ error: error.message });
+        }
+        next(error);
+    }
+};
+exports.register = register;
 const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -52,19 +69,3 @@ const login = async (req, res, next) => {
     }
 };
 exports.login = login;
-const getMe = async (req, res, next) => {
-    try {
-        if (!req.user) {
-            return res.status(401).json({ error: 'Not authenticated.' });
-        }
-        const user = await authService.getCurrentUser(req.user.id);
-        return res.json({ user });
-    }
-    catch (error) {
-        if (error.message === 'User not found.') {
-            return res.status(404).json({ error: error.message });
-        }
-        next(error);
-    }
-};
-exports.getMe = getMe;
