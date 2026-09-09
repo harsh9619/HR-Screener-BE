@@ -41,10 +41,3 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
   };
 };
 
-export const getCurrentUser = async (id: string) => {
-  const user = await findUserById(id);
-  if (!user) {
-    throw new Error('User not found.');
-  }
-  return user;
-};
